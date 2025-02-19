@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Service de l'application Node.js
+  app:
+    build: .
+    container_name: profile-app
+    ports:
+      - "3000:3000"
+    # environment:
+    #   - MONGO_URI=mongodb://mongo:27017/profilesdb
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # Service de la base de données MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - app-network
+
+
+# Réseaux pour connecter l'application et MongoDB
+networks:
+  app-network:
+    driver: bridge
+
+# Volumes pour persister les données MongoDB
+volumes:
+  mongo_data:
+    driver: local
